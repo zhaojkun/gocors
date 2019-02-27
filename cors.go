@@ -107,6 +107,12 @@ func (cors *Cors) Handler(h http.Handler) http.Handler {
 	return cors
 }
 
+func (cors *Cors) HandleFunc(handler func(http.ResponseWriter, *http.Request)) http.Handler {
+	cors = &Cors{cors.allowOrigin, cors.allowMethods, cors.allowHeaders, cors.allowCredentials, cors.exposeHeaders, cors.maxAge, http.HandlerFunc(handler)}
+	//`cors.userHandler = h
+	return cors
+}
+
 func (cors *Cors) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if origin := r.Header.Get("Origin"); origin == "" {
 		//cors.corsNotValid(w, r)
